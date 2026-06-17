@@ -69,10 +69,6 @@
           <i class="material-icons pv-doc-icon">slideshow</i>
           <div class="pv-title"><strong id="pv-doc-name"></strong></div>
           <span id="pv-doc-count" class="pv-meta"></span>
-          <a id="pv-doc-open" class="pv-open" href="#" download
-            data-i18n-title="tool.download" title="下載原始檔">
-            <i class="material-icons">file_download</i>
-          </a>
         </div>
         <!-- PPTXjs 把投影片渲染進這裡（控制器加 .pptx-wrapper、把每張包成 .slide-frame 並縮放） -->
         <div id="pv-container"></div>
@@ -112,6 +108,9 @@
     </div>
     <div id="setting-lang" class="side-tool" data-i18n-title="tool.lang" title="Language">
       <i class="material-icons">translate</i>
+    </div>
+    <div id="setting-download" class="side-tool" data-i18n-title="tool.download" title="下載原始檔" style="display:none">
+      <i class="material-icons">file_download</i>
     </div>
     <div id="setting-clear" class="side-tool" data-i18n-title="tool.clear" title="清空 /upload/pptx-viewer">
       <i class="material-icons">delete_sweep</i>

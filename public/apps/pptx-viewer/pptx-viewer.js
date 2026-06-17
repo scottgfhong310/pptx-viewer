@@ -25,7 +25,7 @@
   var $container = window.jQuery ? jQuery(container) : null;
   var docName = document.getElementById('pv-doc-name');
   var docCount = document.getElementById('pv-doc-count');
-  var docOpen = document.getElementById('pv-doc-open');
+  var downloadBtn = document.getElementById('setting-download');
   var slideNav = document.getElementById('pv-slide-nav');
   var sideNav = document.getElementById('side-nav');
   var dropOverlay = document.getElementById('drop-overlay');
@@ -68,6 +68,29 @@
     docBox.style.display = show ? 'block' : 'none';
     emptyState.style.display = show ? 'none' : '';
     document.body.classList.toggle('is-empty', !show);
+    // 下載側鍵只在有開檔時出現（.side-tool 預設 flex）
+    if (downloadBtn) downloadBtn.style.display = show ? 'flex' : 'none';
+  }
+
+  // 「已執行」微回饋：icon 暫時變 check 800ms（家族 §5.5）
+  function setIconDone(el) {
+    var i = el && el.querySelector('i');
+    if (!i) return;
+    var orig = i.textContent;
+    i.textContent = 'check';
+    setTimeout(function () { i.textContent = orig; }, 800);
+  }
+
+  // 下載目前開啟的原始檔（逐段編碼 href + 原檔名 download）
+  function downloadCurrent() {
+    if (!state.current) return;
+    var a = document.createElement('a');
+    a.href = L.encodePath(state.current);
+    a.download = state.name || L.basename(state.current);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setIconDone(downloadBtn);
   }
 
   /* ---------- loading 動畫（含經過秒數） ---------- */
@@ -305,8 +328,6 @@
     markActive(link);
     showDoc(true);
     showLoading();
-    docOpen.href = L.encodePath(link);
-    docOpen.setAttribute('download', state.name);
     clearOutput();
     return L.checkFile(link)
       .then(function () { renderPptx(L.encodePath(link)); })
@@ -485,6 +506,7 @@
     });
     document.getElementById('setting-mode').addEventListener('click', toggleTheme);
     document.getElementById('setting-lang').addEventListener('click', cycleLang);
+    document.getElementById('setting-download').addEventListener('click', downloadCurrent);
     document.getElementById('setting-clear').addEventListener('click', clearFolder);
 
     window.addEventListener('popstate', function () {

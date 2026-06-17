@@ -185,24 +185,6 @@ body.is-empty main {
   padding: 1px 8px;
 }
 
-.pv-toolbar a.pv-open {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  color: var(--text);
-  opacity: .8;
-  transition: opacity .15s, color .15s;
-}
-
-.pv-toolbar a.pv-open:hover {
-  opacity: 1;
-  color: var(--accent);
-}
-
-.pv-toolbar a.pv-open i {
-  font-size: 20px;
-}
-
 /* PPTXjs 輸出：每張 .slide 包進 .slide-frame；frame 控制顯示尺寸，slide 用 transform:scale 縮放 */
 #pv-container {
   display: block;
