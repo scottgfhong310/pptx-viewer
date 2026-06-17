@@ -38,7 +38,7 @@ npm install && node app.js          # → http://localhost:3000/apps/pptx-viewer
   - `?pptx=` 深連結（`pushState`/`popstate`）。
 - **主題（只有外殼！）**：CSS 變數 light/dark，**預設 dark**（`localStorage('pptx-viewer-theme')||'dark'`）；防閃爍開機腳本同時 toggle `dark-mode`/`light-mode` class。**投影片是作者設計的視覺，不跟主題變深**——只有外殼（toolbar / `--stage` 底色 / 導覽 / 空狀態）跟主題；`.slide-frame` 恆白。切主題只翻 `data-theme`、不重新渲染。列印 `@media print` 隱藏外殼、投影片 `page-break-inside:avoid`。
 - **i18n**：`i18n.js` + `locales/*.js`，`data-i18n`，預設 `zh-Hant`；`meta.slides {n}`、`toast.parseFail`/`parseTimeout`（含 Google Slides 匯出提示）。投影片內容是 **data，永不翻譯**。
-- **side-tool**：`#setting-menu`/`#setting-mode`/`#setting-lang`/`#setting-clear`；〔正統〕flex `.side-tools`。下載原始檔 `#pv-doc-open`（href 經 `encodePath`）。
+- **side-tool**：`#setting-menu`/`#setting-mode`/`#setting-lang`/`#setting-download`（下載原始檔，只在開檔時顯示、臨時 `<a download>` + check 回饋、href 經 `encodePath`）/`#setting-clear`；〔正統〕flex `.side-tools`。**下載走側鍵、toolbar 不放操作鍵**（家族 §4.7）。
 - **安全**：上傳白名單 `.pptx`/`.ppsx`（picker accept + 前端 `isUploadable` 再驗）；後端操作目標寫死、`{ ok }` 信封；危險操作 `confirm()`。jQuery 3.7.1，後端不依賴 lodash。
 - **限制**：PPTXjs 盡力而為；複雜效果 / 部分圖表 / Google Slides 匯出檔可能不完美或失敗（提示使用者用 PowerPoint 另存）。
 - **InProgress 鏡像**：同名前端（含 `vendor/`）回灌到 `InProgress/public/apps/pptx-viewer/`，route 掛在 InProgress 的 `/api/pptx-viewer`；上傳沿用 InProgress 共用 `/api/upload?folder=pptx-viewer`（雙鍵 `{ ok, success }`，前端查 `resp.ok`）。
