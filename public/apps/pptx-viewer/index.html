@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-Hant" data-theme="dark" class="dark-mode">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>PPTX Viewer</title>
+
+  <!-- 防閃爍開機腳本：render 前先依 localStorage 設好 data-theme（預設 dark），
+       同時 toggle dark-mode / light-mode class 驅動共用 materialize-dark.css（見家族 §5.1）。 -->
+  <script>
+    (function () {
+      var t = 'dark';
+      try { var s = localStorage.getItem('pptx-viewer-theme'); if (s === 'light' || s === 'dark') t = s; } catch (e) {}
+      var r = document.documentElement;
+      r.setAttribute('data-theme', t);
+      r.classList.toggle('dark-mode', t === 'dark');
+      r.classList.toggle('light-mode', t === 'light');
+    })();
+  </script>
+
+  <!-- Materialize 1.0.0 + Material Icons -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" />
+  <link rel="stylesheet" href="./materialize-dark.css" />
+
+  <!-- vendored PPTXjs 樣式（見 vendor/，§9.1 bundled 聲明）；本頁樣式在它之後載入以勝出 -->
+  <link rel="stylesheet" href="./vendor/css/pptxjs.css" />
+  <link rel="stylesheet" href="./vendor/css/nv.d3.min.css" />
+
+  <link rel="stylesheet" href="./pptx-viewer.css" />
+  <link rel="stylesheet" href="./thinking-dot.css" /> <!-- 共用 utility：Claude 風「思考中」脈動點 .thinking-dot -->
+  <link rel="stylesheet" href="./side-tool.css" />
+</head>
+
+<body class="is-empty">
+  <!-- 檔案清單側欄 -->
+  <ul id="slide-out" class="sidenav" style="width: 340px;">
+    <li>
+      <a class="subheader">
+        <i class="material-icons">folder_open</i>
+        <span><span id="side-header-label" data-i18n="side.header">Files</span><span
+            class="path">/upload/pptx-viewer</span></span>
+      </a>
+    </li>
+    <li>
+      <div class="divider"></div>
+    </li>
+    <div id="side-nav"></div>
+  </ul>
+
+  <main>
+    <div class="app-container">
+      <!-- 空狀態：可點擊選檔，也接受全頁拖拉 -->
+      <div id="empty-state" class="empty-state">
+        <i class="material-icons">cloud_upload</i>
+        <h5 id="empty-title" data-i18n="empty.title">Drag a presentation anywhere on the page</h5>
+        <div class="hint" id="empty-hint" data-i18n-html="empty.hint">
+          Files are uploaded to <code>/upload/pptx-viewer</code> (same name overwrites);<br />
+          or <u>click to choose a file</u>. Supports <code>.pptx</code> / <code>.ppsx</code>.<br />
+          You can also open one directly with <code>?pptx=&lt;path&gt;</code>.
+        </div>
+      </div>
+
+      <!-- 已載入：toolbar（檔名 + 張數 + 下載原始檔）+ PPTXjs 投影片容器 -->
+      <div id="pv-doc">
+        <div class="pv-toolbar">
+          <i class="material-icons pv-doc-icon">slideshow</i>
+          <div class="pv-title"><strong id="pv-doc-name"></strong></div>
+          <span id="pv-doc-count" class="pv-meta"></span>
+          <a id="pv-doc-open" class="pv-open" href="#" download
+            data-i18n-title="tool.download" title="下載原始檔">
+            <i class="material-icons">file_download</i>
+          </a>
+        </div>
+        <!-- PPTXjs 把投影片渲染進這裡（控制器加 .pptx-wrapper、把每張包成 .slide-frame 並縮放） -->
+        <div id="pv-container"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 左側投影片數字導覽（控制器渲染後填入） -->
+  <ul id="pv-slide-nav"></ul>
+
+  <!-- 載入動畫 -->
+  <div id="loading" aria-hidden="true">
+    <div class="thinking-dot"></div>
+    <div class="loading-text" data-i18n="loading">載入中…</div>
+  </div>
+
+  <!-- 全頁拖拉覆蓋層 -->
+  <div id="drop-overlay">
+    <div class="drop-box">
+      <i class="material-icons">file_download</i>
+      <span id="drop-text" data-i18n="drop.text">Release to upload to /upload/pptx-viewer</span>
+    </div>
+  </div>
+
+  <!-- 隱藏的檔案選擇器 -->
+  <input type="file" id="file-picker" multiple
+    accept=".pptx,.ppsx,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/vnd.openxmlformats-officedocument.presentationml.slideshow"
+    style="display:none;" />
+
+  <!-- ===== 右側工具列（flex 容器自動堆疊，見家族 §5.5） ===== -->
+  <div class="side-tools">
+    <div id="setting-menu" class="side-tool" data-i18n-title="tool.menu" title="檔案清單">
+      <i class="material-icons">folder_open</i>
+    </div>
+    <div id="setting-mode" class="side-tool" data-i18n-title="tool.mode" title="切換 light / dark">
+      <i class="material-icons">dark_mode</i>
+    </div>
+    <div id="setting-lang" class="side-tool" data-i18n-title="tool.lang" title="Language">
+      <i class="material-icons">translate</i>
+    </div>
+    <div id="setting-clear" class="side-tool" data-i18n-title="tool.clear" title="清空 /upload/pptx-viewer">
+      <i class="material-icons">delete_sweep</i>
+    </div>
+  </div>
+
+  <!-- 依賴：jQuery / Materialize / Lodash -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+  <!-- vendored PPTXjs 引擎鏈（jszip → filereader → d3 → nv.d3 → pptxjs → divs2slides → fullscreen） -->
+  <script src="./vendor/js/jszip.min.js"></script>
+  <script src="./vendor/js/filereader.js"></script>
+  <script src="./vendor/js/d3.min.js"></script>
+  <script src="./vendor/js/nv.d3.min.js"></script>
+  <script src="./vendor/js/pptxjs.js"></script>
+  <script src="./vendor/js/divs2slides.js"></script>
+  <script src="./vendor/js/jquery.fullscreen-min.js"></script>
+
+  <script src="./pptx-viewer-lib.js"></script>
+
+  <!-- i18n 引擎 + 語言字典 -->
+  <script src="./i18n.js"></script>
+  <script src="./locales/zh-Hant.js"></script>
+  <script src="./locales/en.js"></script>
+  <script src="./locales/ja.js"></script>
+
+  <script src="./pptx-viewer.js"></script>
+</body>
+
+</html>

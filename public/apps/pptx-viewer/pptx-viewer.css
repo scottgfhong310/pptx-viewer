@@ -1,0 +1,478 @@
+/* pptx-viewer — 頁面樣式
+ * 含主題 token（light/dark）與本頁專屬樣式；共用工具列樣式見 side-tool.css，
+ * 載入點 utility 見 thinking-dot.css，Materialize 元件深色見 materialize-dark.css。
+ *
+ * 注意：投影片是作者設計的視覺（自帶背景/配色/圖片），**不跟主題變深**——
+ * 只有外殼（toolbar / 背景 / 導覽 / 空狀態）跟 data-theme。投影片維持作者原貌（白卡）。
+ * PPTXjs 把 .slide 渲染進 #pv-container（light DOM）。
+ */
+
+/* ===== 主題變數（light / dark；外殼用，家族標準 token） ===== */
+:root,
+[data-theme="dark"] {
+  --bg: #0f1115;
+  --surface: #161a22;
+  --surface-2: #1b2030;
+  --text: #e8eaf0;
+  --muted: #a8b0c0;
+  --border: rgba(255, 255, 255, 0.12);
+  --accent: #90caf9;
+  --card-bg: #0f1115;
+  --tool-bg: #1b2030;
+  --tool-fg: #e8eaf0;
+  --overlay: rgba(10, 14, 22, 0.84);
+  --drop-border: #3a4252;
+  --stage: #0b0d12;
+  --slide-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="light"] {
+  --bg: #f6f8fa;
+  --surface: #ffffff;
+  --surface-2: #eef1f5;
+  --text: #1f2328;
+  --muted: #57606a;
+  --border: rgba(0, 0, 0, 0.12);
+  --accent: #0969da;
+  --card-bg: #ffffff;
+  --tool-bg: #ffffff;
+  --tool-fg: #1f2328;
+  --overlay: rgba(240, 243, 247, 0.86);
+  --drop-border: #c4ccd6;
+  --stage: #e8eaed;
+  --slide-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+}
+
+html.dark-mode,
+html.light-mode {
+  --mz-primary: var(--accent);
+  --mz-focus: var(--accent);
+  --mz-surface: var(--surface);
+  --mz-text: var(--text);
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+    "Microsoft JhengHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+body {
+  transition: background .2s ease, color .2s ease;
+}
+
+/* 已載入時：整頁底色轉「舞台」色，襯托白色投影片 */
+body:not(.is-empty) {
+  background: var(--stage);
+}
+
+main {
+  padding: 18px 0 48px;
+}
+
+body.is-empty main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  width: 94%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ===== 空狀態 ===== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 340px;
+  color: var(--muted);
+  border: 2px dashed var(--drop-border);
+  border-radius: 12px;
+  cursor: pointer;
+  padding: 32px;
+  transition: border-color .15s, color .15s, background .15s;
+}
+
+.empty-state:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.empty-state .material-icons {
+  font-size: 64px;
+  margin-bottom: 8px;
+  opacity: .85;
+}
+
+.empty-state h5 {
+  margin: 6px 0;
+  font-weight: 600;
+}
+
+.empty-state .hint {
+  font-size: .9rem;
+  opacity: .8;
+  max-width: 480px;
+  line-height: 1.7;
+}
+
+.empty-state code {
+  background: var(--surface-2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: .85em;
+}
+
+/* ===== 已載入：toolbar + 投影片 ===== */
+#pv-doc {
+  display: none;
+}
+
+.pv-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.pv-toolbar .pv-doc-icon {
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.pv-toolbar .pv-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.pv-toolbar .pv-title strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.pv-toolbar .pv-meta {
+  flex: 0 0 auto;
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 8px;
+}
+
+.pv-toolbar a.pv-open {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--text);
+  opacity: .8;
+  transition: opacity .15s, color .15s;
+}
+
+.pv-toolbar a.pv-open:hover {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.pv-toolbar a.pv-open i {
+  font-size: 20px;
+}
+
+/* PPTXjs 輸出：每張 .slide 包進 .slide-frame；frame 控制顯示尺寸，slide 用 transform:scale 縮放 */
+#pv-container {
+  display: block;
+}
+
+.pptx-wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.slide-frame {
+  position: relative;
+  margin: 0 auto 28px auto;
+  box-shadow: var(--slide-shadow);
+  background: #fff;
+  overflow: hidden;
+}
+
+.pptx-wrapper .slide {
+  box-shadow: none !important;
+  margin: 0 !important;
+  background: #fff !important;
+  transform-origin: top left;
+}
+
+.pptx-wrapper .block {
+  background: transparent !important;
+}
+
+/* PPTXjs 用原始 1280x720 算 wrapper inline height，縮放後會留白 → 強制由子元素撐高 */
+#pv-container>.slides,
+#all_slides_warpper {
+  height: auto !important;
+}
+
+#pv-container.has-nav {
+  padding-left: 56px;
+}
+
+/* ===== 左側投影片數字導覽（固定、垂直置中；scroll-spy） ===== */
+#pv-slide-nav {
+  position: fixed;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  width: 44px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  z-index: 8;
+  display: none;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+#pv-slide-nav li {
+  list-style: none;
+  margin: 3px 0;
+}
+
+#pv-slide-nav a {
+  display: block;
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: 13px;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: background .15s, color .15s;
+}
+
+#pv-slide-nav a:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+#pv-slide-nav a.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ===== 全頁拖拉覆蓋層 ===== */
+#drop-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--overlay);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+#drop-overlay.show {
+  display: flex;
+}
+
+#drop-overlay .drop-box {
+  border: 3px dashed var(--accent);
+  border-radius: 16px;
+  padding: 40px 64px;
+  text-align: center;
+  color: var(--text);
+  font-size: 1.2rem;
+}
+
+#drop-overlay .material-icons {
+  font-size: 72px;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ===== Sidenav（檔案清單） ===== */
+.sidenav {
+  background: var(--surface) !important;
+  left: auto !important;
+  right: 0 !important;
+}
+
+.sidenav .subheader {
+  height: auto !important;
+  min-height: 0 !important;
+  line-height: 1.4 !important;
+  padding: 12px 20px !important;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--muted) !important;
+}
+
+.sidenav .subheader .material-icons {
+  margin-top: 1px;
+}
+
+.sidenav .subheader .path {
+  display: block;
+  font-size: .76rem;
+  opacity: .8;
+  word-break: break-all;
+}
+
+.sidenav li>a {
+  height: auto !important;
+  line-height: 1.4 !important;
+  padding: 11px 20px !important;
+  color: var(--text) !important;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidenav li>a .material-icons {
+  color: var(--muted) !important;
+  margin: 0;
+}
+
+.sidenav li.active {
+  background: rgba(127, 127, 127, 0.14) !important;
+}
+
+.sidenav li.active>a,
+.sidenav li.active>a .material-icons {
+  color: var(--accent) !important;
+  font-weight: 600;
+}
+
+.sidenav .divider {
+  background-color: var(--border) !important;
+}
+
+.file-meta {
+  font-size: .72rem;
+  color: var(--muted) !important;
+  margin-left: auto;
+  padding-left: 8px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+  opacity: .8;
+}
+
+/* ===== 載入動畫 ===== */
+#loading {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--overlay);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+}
+
+#loading.show {
+  display: flex;
+}
+
+#loading .thinking-dot {
+  --td-color: var(--accent);
+}
+
+#loading .loading-text {
+  color: var(--muted);
+  font-size: .9rem;
+  letter-spacing: .05em;
+}
+
+@media (max-width: 700px) {
+  .pptx-wrapper {
+    padding: 0;
+  }
+
+  .slide-frame {
+    box-shadow: none;
+    margin: 0 0 12px 0;
+  }
+
+  #pv-container.has-nav {
+    padding-left: 40px;
+  }
+
+  #pv-slide-nav {
+    left: 4px;
+    width: 36px;
+  }
+
+  #pv-slide-nav a {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+  }
+}
+
+@media print {
+
+  #toast-container,
+  #loading,
+  .sidenav,
+  .sidenav-overlay,
+  .pv-toolbar,
+  #pv-slide-nav {
+    display: none !important;
+  }
+
+  html,
+  body,
+  main {
+    background: #fff !important;
+  }
+
+  #pv-container.has-nav {
+    padding-left: 0 !important;
+  }
+
+  .slide-frame {
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

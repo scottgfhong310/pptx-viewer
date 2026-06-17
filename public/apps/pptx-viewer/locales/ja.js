@@ -1,0 +1,28 @@
+/* 日本語 (ja) */
+I18n.register('ja', {
+  'title.suffix': 'PPTX Viewer',
+  'empty.title': 'プレゼンをページ上にドラッグ＆ドロップ',
+  'empty.hint': 'ファイルは <code>/upload/pptx-viewer</code> にアップロードされます（同名は上書き）。<br />または<u>クリックしてファイルを選択</u>。対応：<code>.pptx</code> / <code>.ppsx</code>。<br /><code>?pptx=&lt;パス&gt;</code> で直接開くこともできます。',
+  'drop.text': '離して /upload/pptx-viewer にアップロード',
+  'side.header': 'ファイル一覧',
+  'side.noFiles': 'ファイルがありません。ドラッグしてアップロード',
+  'loading': '読み込み中…',
+  'meta.slides': 'スライド {n} 枚',
+  'tool.menu': 'ファイル一覧',
+  'tool.mode': 'ライト / ダーク切替',
+  'tool.lang': '言語',
+  'tool.clear': '/upload/pptx-viewer を空にする',
+  'tool.download': '元のファイルをダウンロード',
+  'toast.badLink': '許可されないパス（トラバーサル / 外部プロトコルを遮断）',
+  'toast.loadFail': '読み込み失敗：{n}（{m}）',
+  'toast.notPptx': 'プレゼンファイル（.pptx / .ppsx）をドロップしてください',
+  'toast.engineMissing': 'レンダラが未読み込みです。ページを再読み込みしてください',
+  'toast.parseFail': '解析に失敗（{m}）。Google スライドから書き出した場合は、まず PowerPoint／LibreOffice で保存し直してください。',
+  'toast.parseTimeout': '解析がタイムアウト（{s}s 進展なし）。ファイルが大きすぎる/非対応の可能性があります。Google スライド由来なら PowerPoint で保存し直してください。',
+  'toast.uploaded': 'アップロード完了：{n}',
+  'toast.uploadFail': 'アップロード失敗：{n}（{m}）',
+  'toast.listFail': 'ファイル一覧の取得に失敗：{m}',
+  'toast.cleared': '{n} 件のファイルを削除しました',
+  'toast.clearFail': '削除に失敗：{m}',
+  'confirm.clear': '/upload/pptx-viewer 内のすべてのファイルを削除しますか？この操作は取り消せません。'
+}, '日本語');

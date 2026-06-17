@@ -1,0 +1,28 @@
+/* English (en) */
+I18n.register('en', {
+  'title.suffix': 'PPTX Viewer',
+  'empty.title': 'Drag a presentation anywhere on the page',
+  'empty.hint': 'Files are uploaded to <code>/upload/pptx-viewer</code> (same name overwrites);<br />or <u>click to choose a file</u>. Supports <code>.pptx</code> / <code>.ppsx</code>.<br />You can also open one directly with <code>?pptx=&lt;path&gt;</code>.',
+  'drop.text': 'Release to upload to /upload/pptx-viewer',
+  'side.header': 'Files',
+  'side.noFiles': 'No files yet — drag one in to upload',
+  'loading': 'Loading…',
+  'meta.slides': '{n} slides',
+  'tool.menu': 'File list',
+  'tool.mode': 'Toggle light / dark',
+  'tool.lang': 'Language',
+  'tool.clear': 'Clear /upload/pptx-viewer',
+  'tool.download': 'Download the original file',
+  'toast.badLink': 'Path not allowed (blocks traversal / external protocols)',
+  'toast.loadFail': 'Failed to load: {n} ({m})',
+  'toast.notPptx': 'Please drop a presentation (.pptx / .ppsx)',
+  'toast.engineMissing': 'Renderer not loaded yet — please reload the page',
+  'toast.parseFail': 'Parse failed ({m}). If exported from Google Slides, re-save it in PowerPoint / LibreOffice first.',
+  'toast.parseTimeout': 'Parse timed out ({s}s with no progress). The file may be too large or incompatible; if exported from Google Slides, re-save in PowerPoint first.',
+  'toast.uploaded': 'Uploaded: {n}',
+  'toast.uploadFail': 'Upload failed: {n} ({m})',
+  'toast.listFail': 'Failed to load file list: {m}',
+  'toast.cleared': 'Cleared {n} file(s)',
+  'toast.clearFail': 'Clear failed: {m}',
+  'confirm.clear': 'Clear all files under /upload/pptx-viewer? This cannot be undone.'
+}, 'English');

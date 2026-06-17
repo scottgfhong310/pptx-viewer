@@ -1,0 +1,25 @@
+{
+  "name": "pptx-viewer",
+  "version": "1.0.0",
+  "description": "在瀏覽器內檢視 PowerPoint 簡報（.pptx/.ppsx）的單頁 WebApp（vendored PPTXjs：逐張投影片渲染、縮放、投影片導覽）+ 輕量 Express 後端（上傳 / 列表 / 清空）。",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "pptx",
+    "powerpoint",
+    "presentation",
+    "viewer",
+    "pptxjs",
+    "slides",
+    "express",
+    "materialize"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "morgan": "^1.10.0",
+    "multer": "^2.0.0"
+  }
+}

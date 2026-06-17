@@ -1,0 +1,19 @@
+# 依賴
+node_modules/
+
+# 系統檔
+.DS_Store
+Thumbs.db
+
+# 編輯器 / 工具
+.vscode/
+.claude/
+
+# 日誌
+*.log
+
+# 上傳的使用者檔（保留資料夾結構，不追蹤內容；附少量 sample）
+/public/upload/pptx-viewer/*
+!/public/upload/pptx-viewer/.gitkeep
+!/public/upload/pptx-viewer/*.pptx
+!/public/upload/pptx-viewer/*.ppsx
