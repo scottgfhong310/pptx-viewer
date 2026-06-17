@@ -5,6 +5,8 @@
 本 app 屬於 **nodeapp WebApp 家族**；共同規範與流程在
 <https://github.com/scottgfhong310/nodeapp-webapp-family>（`DESIGN_GUIDELINES.md` 規範、`WORKFLOW.md` 流程、`PLAYBOOK.md` 逐步劇本）。**改動前請先讀那幾份，照其中 canon 做。**
 
+**設計細節（架構 / 逐模組 / 決策 / 限制）見 [DESIGN.md](./DESIGN.md)。**
+
 ## 結構
 
 ```
