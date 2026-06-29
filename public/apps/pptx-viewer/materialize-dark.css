@@ -596,6 +596,10 @@ td {
   color: var(--mz-text);
 }
 
+/* 彩色 toast（家族 §7：teal/green/red/orange/grey，皆為飽和深底）文字固定白色。
+ * 否則上面的 color:var(--mz-text) 在淺色模式會是深字、疊在深色 toast 底上低對比。 */
+.toast.teal, .toast.green, .toast.red, .toast.orange, .toast.grey { color: #fff; }
+
 .material-tooltip {
   background-color: var(--mz-surface-3);
   color: var(--mz-text);
