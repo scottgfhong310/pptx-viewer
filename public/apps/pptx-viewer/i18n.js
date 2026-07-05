@@ -14,6 +14,7 @@
  *   屬性：data-i18n-placeholder / data-i18n-title / （<body>）data-i18n-doctitle
  *   程式內：I18n.t('meta.rulesLoaded', { n: 5 })
  *   切換：I18n.set('ja')   // persist 並派發 document 事件 'i18n:changed'
+ *   循環：I18n.cycle()     // 切到下一個已註冊語言，回傳新 code（供語言切換 toast 顯示 I18n.name(code)）
  *   切換器可用 I18n.langs / I18n.name(code) 自動產生
  *
  * 初始語系：?lang= → localStorage('lang') → 瀏覽器語言 → 'zh-Hant' → 第一個已註冊語言
@@ -100,11 +101,23 @@
     document.dispatchEvent(new Event('i18n:changed'));
   }
 
+  // 切到「下一個」已註冊語言（依註冊順序循環），persist 並派發 i18n:changed。
+  // 回傳切換後的語言 code（UI 可用 I18n.name(code) 顯示，如語言切換 toast）。
+  function cycle() {
+    ensureInit();
+    var ks = Object.keys(messages);
+    if (!ks.length) return lang;
+    var next = ks[(ks.indexOf(lang) + 1) % ks.length];
+    set(next);
+    return next;
+  }
+
   window.I18n = {
     register: register,
     t: t,
     apply: apply,
     set: set,
+    cycle: cycle,
     get lang() { ensureInit(); return lang; },
     get langs() { return Object.keys(messages); },
     name: function (code) { return names[code] || code; },

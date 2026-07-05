@@ -11,6 +11,7 @@ I18n.register('ja', {
   'tool.menu': 'ファイル一覧',
   'tool.mode': 'ライト / ダーク切替',
   'tool.lang': '言語',
+  'toast.lang': '{name} に切り替えました',
   'tool.clear': '/upload/pptx-viewer を空にする',
   'tool.download': '元のファイルをダウンロード',
   'toast.badLink': '許可されないパス（トラバーサル / 外部プロトコルを遮断）',

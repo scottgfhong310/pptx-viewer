@@ -461,10 +461,8 @@
   /* ---------- 語系（i18n） ---------- */
 
   function cycleLang() {
-    var langs = I18n.langs;
-    var i = langs.indexOf(I18n.lang);
-    I18n.set(langs[(i + 1) % langs.length]);
-    M.toast({ html: I18n.name(I18n.lang) });
+    var next = I18n.cycle();
+    M.toast({ html: I18n.t('toast.lang', { name: I18n.name(next) }), classes: 'teal' });
   }
 
   function onLangChanged() {
