@@ -16,7 +16,7 @@ routes/pptx-viewer.js               # GET /files、POST /clear
 public/apps/pptx-viewer/            # 前端（服務於 /apps/pptx-viewer/）
 ├─ index.html · pptx-viewer.css · pptx-viewer.js · pptx-viewer-lib.js
 ├─ vendor/                          # vendored PPTXjs 引擎（js/ + css/）+ LICENSE.PPTXjs
-├─ materialize-dark.css · side-tool.css · thinking-dot.css
+├─ materialize-dark.css · side-tool.css · thinking-dot.css   # thinking-dot.css＝共用載入點 utility（權威＝獨立 repo thinking-dot；載入點預設 2026-07-19 隨權威統一 14px→27px/2.1s）
 ├─ i18n.js · locales/{zh-Hant,en,ja}.js
 public/upload/pptx-viewer/          # 上傳的簡報（內容不進版控；附一個 .pptx sample）
 ```
