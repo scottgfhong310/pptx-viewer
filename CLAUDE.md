@@ -11,7 +11,7 @@
 
 ```
 app.js                              # Express 入口：port 3000；/ → 302 /apps/pptx-viewer/
-routes/upload.js                    # POST /api/upload?folder=pptx-viewer（共用最小版；含檔名消毒 sanitizeUploadName，§3.4）
+routes/upload.js                    # POST /api/upload?folder=pptx-viewer（家族共用最小版：權威版＝ nodeapp-webapp-family/routes-upload.js，byte-identical；含檔名消毒 sanitizeUploadName，§3.4）
 routes/pptx-viewer.js               # GET /files、POST /clear
 public/apps/pptx-viewer/            # 前端（服務於 /apps/pptx-viewer/）
 ├─ index.html · pptx-viewer.css · pptx-viewer.js · pptx-viewer-lib.js
