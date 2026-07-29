@@ -7,6 +7,17 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <title>PPTX Viewer</title>
 
+  <!-- App icon / favicon / PWA（icons/ 內，一律相對路徑；viewer 六支共用同一套模板，見 scripts/make-icons.py）§5.5 -->
+  <link rel="icon" href="./icons/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" media="(prefers-color-scheme: dark)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon-light.svg" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="./icons/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png" />
+  <link rel="manifest" href="./icons/manifest.json" />
+  <meta name="theme-color" content="#0f1115" />
+
   <!-- 防閃爍開機腳本：render 前先依 localStorage 設好 data-theme（預設 dark），
        同時 toggle dark-mode / light-mode class 驅動共用 materialize-dark.css（見家族 §5.1）。 -->
   <script>
