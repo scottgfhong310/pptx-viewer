@@ -20,6 +20,7 @@ public/apps/pptx-viewer/            # 前端（服務於 /apps/pptx-viewer/）
 ├─ i18n.js · locales/{zh-Hant,en,ja}.js
 public/upload/pptx-viewer/          # 上傳的簡報（內容不進版控；附一個 .pptx sample）
 scripts/make-icons.py               # viewer 六支共用的 icon 產生器（六份 byte-identical）
+scripts/sync-copies.sh              # viewer 六支共用的回灌腳本（同上；不碰 upload.js／public/upload/）
 public/apps/pptx-viewer/icons/              # App icon：母版 SVG 深/淺＋favicon(.ico/.svg)＋PNG 16–512＋manifest
 
 ```
@@ -51,6 +52,18 @@ python3 scripts/make-icons.py       # 重產整套 icon（SVG／PNG／.ico／man
   → 倍率要用「目標 ÷ 實際 page 寬」反推。
 - **產出要排出來看**：`html-viewer` 第一版的角括號尖端朝內，讀起來是一個 ✕ 而不是 `< >`——
   九個 PNG 都產出、尺寸都對，光看檔案清單完全發現不了。
+
+### 回灌 InProgress
+
+```bash
+bash scripts/sync-copies.sh
+```
+
+同樣是 **viewer 六支共用、byte-identical 的一份**（靠 repo 目錄名認自己是誰）。
+**兩個絕對不覆蓋的東西**：`routes/upload.js`（InProgress 是加強版，往回蓋會弄壞孵化器上
+所有 app 的上傳——腳本只搬 `routes/<app>.js`，並在偵測到兩邊變成一樣時出聲）、
+`public/upload/`（使用者實際上傳的檔案，從不觸碰）。`app.js` 同理不同步。
+共用件一律**只驗不抓**，不一致時明講去哪個 repo 同步、回非 0。
 
 ## 本 app 的 canon 重點
 
