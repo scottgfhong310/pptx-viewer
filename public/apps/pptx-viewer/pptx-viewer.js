@@ -394,9 +394,16 @@
     var chain = Promise.resolve();
     arr.forEach(function (file) {
       chain = chain.then(function () {
-        return L.uploadFile(file).then(function () {
-          lastName = file.name;
-          M.toast({ html: I18n.t('toast.uploaded', { n: file.name }), classes: 'green' });
+        return L.uploadFile(file).then(function (resp) {
+          // ⚠️ 一律以伺服器回報的 filename 為準，不可用 file.name——撞名時後端會改名，
+          //    用 file.name 會讓 refreshFiles 選中「原本就在的那個舊檔」（家族 §3.3）。
+          var info = (resp && resp.files && resp.files[0]) || {};
+          var saved = info.filename || file.name;
+          lastName = saved;
+          M.toast({
+            html: I18n.t(info.renamed ? 'toast.uploadedRenamed' : 'toast.uploaded', { n: saved }),
+            classes: 'green'
+          });
         }).catch(function (err) {
           M.toast({ html: I18n.t('toast.uploadFail', { n: file.name, m: err.message }), classes: 'red' });
         });

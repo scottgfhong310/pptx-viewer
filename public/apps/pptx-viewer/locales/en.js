@@ -21,6 +21,7 @@ I18n.register('en', {
   'toast.parseFail': 'Parse failed ({m}). If exported from Google Slides, re-save it in PowerPoint / LibreOffice first.',
   'toast.parseTimeout': 'Parse timed out ({s}s with no progress). The file may be too large or incompatible; if exported from Google Slides, re-save in PowerPoint first.',
   'toast.uploaded': 'Uploaded: {n}',
+  'toast.uploadedRenamed': 'Name already exists — saved as: {n}',
   'toast.uploadFail': 'Upload failed: {n} ({m})',
   'toast.listFail': 'Failed to load file list: {m}',
   'toast.cleared': 'Cleared {n} file(s)',

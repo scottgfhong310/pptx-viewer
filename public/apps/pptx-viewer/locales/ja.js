@@ -21,6 +21,7 @@ I18n.register('ja', {
   'toast.parseFail': '解析に失敗（{m}）。Google スライドから書き出した場合は、まず PowerPoint／LibreOffice で保存し直してください。',
   'toast.parseTimeout': '解析がタイムアウト（{s}s 進展なし）。ファイルが大きすぎる/非対応の可能性があります。Google スライド由来なら PowerPoint で保存し直してください。',
   'toast.uploaded': 'アップロード完了：{n}',
+  'toast.uploadedRenamed': '同名のため {n} として保存しました',
   'toast.uploadFail': 'アップロード失敗：{n}（{m}）',
   'toast.listFail': 'ファイル一覧の取得に失敗：{m}',
   'toast.cleared': '{n} 件のファイルを削除しました',

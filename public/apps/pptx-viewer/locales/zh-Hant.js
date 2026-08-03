@@ -21,6 +21,7 @@ I18n.register('zh-Hant', {
   'toast.parseFail': '解析失敗（{m}）。若由 Google Slides 匯出，請先用 PowerPoint／LibreOffice 另存再試。',
   'toast.parseTimeout': '解析逾時（{s}s 無進展）。檔案可能過大或不相容；若由 Google Slides 匯出，請先用 PowerPoint 另存再試。',
   'toast.uploaded': '已上傳：{n}',
+  'toast.uploadedRenamed': '同名已存在，已存為：{n}',
   'toast.uploadFail': '上傳失敗：{n}（{m}）',
   'toast.listFail': '讀取檔案清單失敗：{m}',
   'toast.cleared': '已清空 {n} 個檔案',
