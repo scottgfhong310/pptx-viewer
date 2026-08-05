@@ -11,6 +11,7 @@ I18n.register('zh-Hant', {
   'tool.menu': '檔案清單',
   'tool.mode': '切換 light / dark',
   'tool.lang': '語言',
+  'tool.more': '更多工具',
   'toast.lang': '已切換為 {name}',
   'tool.clear': '清空 /upload/pptx-viewer',
   'tool.download': '下載原始檔',
